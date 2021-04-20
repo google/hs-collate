@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7b62ec92a4ff659a3f5f3c13fb808340199084e601f378f35fbced36b28c712c
+-- hash: ec188a08c8beff48543dec419f16062badc0a802354c28df0e6a4e8629e3ecb6
 
 name:           collate
 version:        0.1.0.0
@@ -37,12 +37,12 @@ library
       src
   ghc-options: -Wall -Werror
   build-depends:
-      base
-    , containers
-    , lens
-    , primitive
-    , transformers
-    , vector
+      base >=4.12 && <4.16
+    , containers >=0.1 && <0.7
+    , lens >=3.0 && <5.1
+    , primitive >=0.6 && <0.8
+    , transformers >=0.2 && <0.6
+    , vector >=0.5 && <0.13
   default-language: Haskell2010
 
 test-suite Collate-test
@@ -55,13 +55,13 @@ test-suite Collate-test
   ghc-options: -Wall -Werror
   build-depends:
       QuickCheck
-    , base
+    , base >=4.12 && <4.16
     , collate
-    , containers
-    , lens
-    , primitive
+    , containers >=0.1 && <0.7
+    , lens >=3.0 && <5.1
+    , primitive >=0.6 && <0.8
     , test-framework
     , test-framework-quickcheck2
-    , transformers
-    , vector
+    , transformers >=0.2 && <0.6
+    , vector >=0.5 && <0.13
   default-language: Haskell2010
