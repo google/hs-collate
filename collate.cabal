@@ -1,0 +1,67 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 7b62ec92a4ff659a3f5f3c13fb808340199084e601f378f35fbced36b28c712c
+
+name:           collate
+version:        0.1.0.0
+synopsis:       An Applicative Functor for extracting parts of a stream of values
+description:    This provides a way to build up a computation that accesses many different
+                indices (possibly out-of-order) of a large stream of values, and run it in a
+                single scan over the stream.  In essence, this implements a hash-join.
+category:       Algorithms
+homepage:       https://github.com/google/hs-collate#readme
+bug-reports:    https://github.com/google/hs-collate/issues
+author:         Andrew Pritchard <awpr@google.com>
+maintainer:     Andrew Pritchard <awpr@google.com>
+copyright:      2018-2021 Google LLC
+license:        Apache-2.0
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/google/hs-collate
+
+library
+  exposed-modules:
+      Data.Collate
+  other-modules:
+      Paths_collate
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Werror
+  build-depends:
+      base
+    , containers
+    , lens
+    , primitive
+    , transformers
+    , vector
+  default-language: Haskell2010
+
+test-suite Collate-test
+  type: exitcode-stdio-1.0
+  main-is: CollateTest.hs
+  other-modules:
+      Paths_collate
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Werror
+  build-depends:
+      QuickCheck
+    , base
+    , collate
+    , containers
+    , lens
+    , primitive
+    , test-framework
+    , test-framework-quickcheck2
+    , transformers
+    , vector
+  default-language: Haskell2010
