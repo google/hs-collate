@@ -12,6 +12,8 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+{-# LANGUAGE RankNTypes #-}
+
 -- | An Applicative Functor for extracting parts of a stream of values.
 --
 -- Basic usage involves building up a computation from calls to the 'sample'
@@ -21,23 +23,23 @@
 -- according to the Applicative structure.
 --
 -- Because this is written against 'ST', we can run 'Collate's purely, or
--- convert them to 'IO' as if by 'stToIO', and run them with actual I/O
--- interspersed.  This means a 'Collate' can be driven by a streaming
--- abstraction such as "conduit" or "pipes".
+-- convert them to 'IO' as if by 'Control.Monad.ST.stToIO', and run them with
+-- actual I/O interspersed.  This means a 'Collate' can be driven by a
+-- streaming abstraction such as
+-- <https://hackage.haskell.org/package/conduit conduit> or
+-- <https://hackage.haskell.org/package/pipes pipes>.
 --
 -- Finally, although 'Collate' itself doesn't admit any reasonable 'Monad'
--- implementation [1], it can be used with "free" to describe multi-pass
--- algorithms over (repeatable) streams.
---
--- [1]: To implement 'join', we'd potentially need to look over the whole
--- stream of inputs to be able to construct the inner 'Collate' and determine
--- which inputs it needs to inspect.  So, we'd need to make multiple passes.
--- If we extended the type to support multiple passes and gave it a 'Monad'
--- instance that implemented ('>>=') by making two passes, then the
--- 'Applicative' instance would also be required to make two passes for ('<*>'),
--- because of the law that @('<*>') = 'ap'@ for any 'Monad'.
-
-{-# LANGUAGE RankNTypes #-}
+-- implementation, it can be used with
+-- <https://hackage.haskell.org/package/free free> to describe multi-pass
+-- algorithms over (repeatable) streams.  To implement 'Control.Monad.join',
+-- we'd potentially need to look over the whole stream of inputs to be able to
+-- construct the inner 'Collate' and determine which inputs it needs to
+-- inspect.  So, we'd need to make multiple passes.  If we extended the type to
+-- support multiple passes and gave it a 'Monad' instance that implemented
+-- ('>>=') by making two passes, then the 'Applicative' instance would also be
+-- required to make two passes for ('<*>'), because of the law that @('<*>') =
+-- 'Control.Monad.ap'@ for any 'Monad'.
 
 module Data.Collate
          ( -- * Types
@@ -117,15 +119,21 @@ withCollator (Collate go) k = do
   k (Collator samples)
   liftPrim stA
 
--- | Drive a 'Collator' with any 'Fold' over the input type it expects.
+-- | Drive a 'Collator' with any 'Control.Lens.Fold' over the input type it
+-- expects.
 --
--- The 'Int' parameter is the index of the first item in the 'Fold' (so that
--- you can supply the input in multiple chunks).
+-- The 'Int' parameter is the index of the first item in the
+-- 'Control.Lens.Fold' (so that you can supply the input in multiple chunks).
+--
+-- @
+-- feedCollatorOf
+--   :: PrimMonad m
+--   => Fold s c -> Int -> Collator m c -> s -> m Int
+-- @
 feedCollatorOf
   :: forall m s c
    . PrimMonad m
   => Traversing' (->) (Const (Sequenced () (StateT Int (ST (PrimState m))))) s c
-     -- ^ @Fold s c@.
   -> Int -> Collator m c -> s -> m Int
 feedCollatorOf l i0 (Collator samplers) s = liftPrim $ flip execStateT i0 $
   forMOf_ (taking n l) s $ \c -> do
@@ -151,6 +159,13 @@ collate :: Foldable f => Collate c a -> f c -> a
 collate = collateOf folded
 
 -- | Run a 'Collate' on any 'Fold'.
+--
+-- The type signature looks complicated because we expand @Fold@ to avoid
+-- incurring a dependency on @lens@, but it's effectively just:
+--
+-- @
+-- collateOf :: Fold s c -> Collate c a -> s -> a
+-- @
 collateOf
   :: ( forall s0
      . Traversing' (->) (Const (Sequenced () (StateT Int (ST s0)))) s c
