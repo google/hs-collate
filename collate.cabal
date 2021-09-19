@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f67c86447a0c790d436c240b556273efdde3c5e0647dadec0b6598803cd7af4d
+-- hash: 1d0d297fcc59a808ef3d01ca23e51e08dd448ce36a582d4646410c498bc55c0c
 
 name:           collate
 version:        0.1.0.0
@@ -31,8 +31,6 @@ source-repository head
 library
   exposed-modules:
       Data.Collate
-  other-modules:
-      Paths_collate
   hs-source-dirs:
       src
   build-depends:
@@ -47,8 +45,6 @@ library
 test-suite Collate-test
   type: exitcode-stdio-1.0
   main-is: CollateTest.hs
-  other-modules:
-      Paths_collate
   hs-source-dirs:
       test
   build-depends:
