@@ -3,8 +3,6 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 1d0d297fcc59a808ef3d01ca23e51e08dd448ce36a582d4646410c498bc55c0c
 
 name:           collate
 version:        0.1.0.0
@@ -34,7 +32,7 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.12 && <4.16
+      base >=4.12 && <4.17
     , containers >=0.1 && <0.7
     , lens >=3.0 && <5.1
     , primitive >=0.6 && <0.8
@@ -49,7 +47,7 @@ test-suite Collate-test
       test
   build-depends:
       QuickCheck
-    , base >=4.12 && <4.16
+    , base >=4.12 && <4.17
     , collate
     , containers >=0.1 && <0.7
     , lens >=3.0 && <5.1
